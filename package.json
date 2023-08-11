@@ -1,0 +1,21 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxtjs/google-fonts": "^3.0.0",
+    "@types/node": "^18",
+    "nuxt": "^3.4.3"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^3.11.0",
+    "swiper": "^9.3.1",
+    "vue-collapsed": "^1.1.3"
+  }
+}

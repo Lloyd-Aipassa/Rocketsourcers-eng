@@ -1,0 +1,177 @@
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
+
+// See this file to see how the IntersectionObserver is implemented
+import { onIntersect } from "~/composables/onInterSect";
+
+const observer = ref({});
+const scrollRef = ref({});
+const counter = ref(0);
+
+// This is the callback being called on intersection
+const onEnter = () => {
+    document.documentElement.style.setProperty(
+        "--body-background",
+        "var(--color-dark)"
+    );
+
+    // document.documentElement.style.setProperty(
+    //     "--card-background",
+    //     "var(--color-black)"
+    // );
+
+    setInterval(() => {
+        if (counter.value < 100) {
+            counter.value++;
+        }
+    }, 15);
+
+    console.log("entered");
+};
+// // This is the callback being called on intersection
+// const onEnter = () => {
+//   document.documentElement.style.setProperty(
+//     "--body-background",
+//     "var(--color-dark)"
+//   );
+
+//   document.documentElement.style.setProperty(
+//     "--card-background",
+//     "var(--color-black)"
+//   );
+//   document.documentElement.style.setProperty(
+//     "--color-text",
+//     "var(--color-white)"
+//   );
+//   console.log("entered");
+// };
+
+
+
+
+
+
+
+
+
+// This is the (optional) callback being called when the element no longer intersects
+const onExit = () => {
+    document.documentElement.style.setProperty(
+        "--body-background",
+        "var(--color-red)"
+    );
+    document.documentElement.style.setProperty(
+        "--card-background",
+        "var(--color-white)"
+    );
+    document.documentElement.style.setProperty(
+        "--color-text",
+        "var(--color-dark)"
+    );
+    console.log("exited");
+
+    setInterval(() => {
+        if (counter.value < 750) {
+            counter.value++;
+        }
+    }, 1);
+};
+// When the component is mounted, start observing
+onMounted(() => {
+    /* Our observer composable is used here (onIntersect) with 
+        onEnter as the callback when intersecting and 
+        onExit as the callback when no longer intersecting.
+        {threshold: 0.8} is the IntersectionObserver Options
+    */
+    observer.value = onIntersect(scrollRef.value, onEnter, onExit, false, {
+        threshold: 0.7,
+    });
+});
+
+// When the component is removed, disconnect the observer (clean-up step)
+onUnmounted(() => {
+    observer.value.disconnect();
+});
+</script>
+
+
+<template>
+    <section class="scrollSection">
+        <div class="card">
+            <h2>
+                I see a red door<br />
+                And I want it painted black
+            </h2>
+        </div>
+    </section>
+    <section class="scrollSection" ref="scrollRef">
+        <div class="card">
+            <p class="tel">
+               <span class="text-9xl">{{ counter }}</span>
+          </p>
+            <h2>
+                No colors anymore<br />
+                I want them to turn black
+            </h2>
+        </div>
+    </section>
+</template>
+
+
+<style>
+:root {
+    --color-dark: #2c3e50;
+    --color-red: #f9526a;
+    --color-white: #ffffff;
+    --color-black: #1b2631;
+
+    --body-background: var(--color-red);
+    --color-text: var(--color-dark);
+    --card-background: var(--color-white);
+}
+
+#app {
+    background: var(--body-background);
+    font-family: "Poppins", Avenir, Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: var(--color-text);
+    margin: 0;
+    padding-top: 60px;
+    transition: background 300ms ease-in-out;
+    width: 100vw;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+h2 {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.scrollSection {
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+    width: 100vw;
+}
+
+.card {
+    background: var(--card-background);
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px,
+        rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    border-radius: 25px;
+    display: inline-flex;
+    margin: 0 auto 45px;
+    padding: 60px 60px;
+    height: 300px;
+    width: 300px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+</style>
